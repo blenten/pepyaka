@@ -3,7 +3,7 @@ namespace Pepsite\Entity;
 
 abstract class DBEntity
 {
-    public function fromDbData($data)
+    public function exchangeArray($data)
     {
         foreach (array_keys(get_object_vars($this)) as $property) {
             $this->$property = !empty($data[$property]) ? $data[$property] : null;

@@ -10,7 +10,7 @@ USE `pepyaka`;
 CREATE TABLE IF NOT EXISTS `comments` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `content` text NOT NULL,
-  `post_time` datetime NOT NULL DEFAULT current_timestamp(),
+  `postTime` datetime NOT NULL DEFAULT current_timestamp(),
   `author` varchar(250) NOT NULL,
   `target` varchar(250) NOT NULL,
   PRIMARY KEY (`id`),
@@ -33,13 +33,13 @@ CREATE TABLE IF NOT EXISTS `users` (
 CREATE TABLE IF NOT EXISTS `votes` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `effect` enum('+','-') NOT NULL,
-  `vote_time` datetime NOT NULL DEFAULT current_timestamp(),
+  `voteTime` datetime NOT NULL DEFAULT current_timestamp(),
   `voter` varchar(250) DEFAULT NULL,
-  `vote_for` varchar(250) DEFAULT NULL,
+  `voteFor` varchar(250) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `voter` (`voter`),
-  KEY `votefor` (`vote_for`),
-  CONSTRAINT `votefor` FOREIGN KEY (`vote_for`) REFERENCES `users` (`login`) ON DELETE CASCADE ON UPDATE CASCADE,
+  KEY `votefor` (`voteFor`),
+  CONSTRAINT `votefor` FOREIGN KEY (`voteFor`) REFERENCES `users` (`login`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `voter` FOREIGN KEY (`voter`) REFERENCES `users` (`login`) ON DELETE SET NULL ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
