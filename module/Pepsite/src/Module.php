@@ -6,7 +6,7 @@ use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\TableGateway\TableGateway;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
 
-class Module
+class Module implements ConfigProviderInterface
 {
     public function getConfig()
     {
@@ -17,9 +17,10 @@ class Module
     {
         return [
             'factories' => [
-                Model\Users::class => function($container) {
-                    $tableGateway = $container->get(Model\UsersGateway::class);
-                    return new Model\Users($tableGateway);
+                Model\UsersTable::class => function ($container) {
+                    return new Model\UsersTable(
+                        $container->get(Model\UsersGateway::class)
+                    );
                 },
                 Model\UsersGateway::class => function ($container) {
                     $dbAdapter = $container->get(AdapterInterface::class);
@@ -28,6 +29,17 @@ class Module
                     return new TableGateway('users', $dbAdapter, null, $resultSetPrototype);
                 },
             ],
+        ];
+    }
+
+    public function getControllerConfig()
+    {
+        return [
+            'factories' => [
+                Controller\IndexController::class => function ($container) {
+                    return new Controller\IndexController($container->get(Model\UsersTable::class));
+                }
+            ]
         ];
     }
 }

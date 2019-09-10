@@ -5,7 +5,7 @@ use RuntimeException;
 use Zend\Db\TableGateway\TableGatewayInterface;
 use Pepsite\Entity\User;
 
-class Users
+class UsersTable
 {
     private $tableGateway;
 
