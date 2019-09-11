@@ -1,14 +1,8 @@
 <?php
-/** @noinspection PhpUndefinedClassInspection */
-/** @noinspection PhpParamsInspection */
 /** @noinspection PhpUndefinedMethodInspection */
 
 namespace Pepsite;
 
-use Pepsite\Controller\UserController;
-use Zend\Db\Adapter\AdapterInterface;
-use Zend\Db\ResultSet\ResultSet;
-use Zend\Db\TableGateway\TableGateway;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
 
 class Module implements ConfigProviderInterface
@@ -21,19 +15,11 @@ class Module implements ConfigProviderInterface
     public function getServiceConfig()
     {
         return [
-            'factories' => [
-                Model\UsersTable::class => function ($container) {
-                    return new Model\UsersTable(
-                        $container->get(Model\UsersGateway::class)
-                    );
-                },
-                Model\UsersGateway::class => function ($container) {
-                    $dbAdapter = $container->get(AdapterInterface::class);
-                    $resultSetPrototype = new ResultSet();
-                    $resultSetPrototype->setArrayObjectPrototype(new Entity\User());
-                    return new TableGateway('users', $dbAdapter, null, $resultSetPrototype);
-                },
-            ],
+            'factories' => array_merge(
+                Model\UsersTable::makeFactories(),
+                Model\VotesTable::makeFactories(),
+                Model\CommentsTable::makeFactories(),
+            )
         ];
     }
 

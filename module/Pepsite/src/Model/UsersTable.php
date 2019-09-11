@@ -1,17 +1,14 @@
 <?php
 namespace Pepsite\Model;
 
-use Zend\Db\TableGateway\TableGatewayInterface;
 use Zend\Db\Sql\Select;
 use Pepsite\Entity\User;
 
-class UsersTable
+class UsersTable extends DBTable
 {
-    private $tableGateway;
-
-    public function __construct(TableGatewayInterface $tableGateway)
+    public static function makeFactories()
     {
-        $this->tableGateway = $tableGateway;
+        return parent::mkfcs('users', self::class, User::class);
     }
 
     public function getUser($login)
