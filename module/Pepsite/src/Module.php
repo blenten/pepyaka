@@ -1,6 +1,11 @@
 <?php
+/** @noinspection PhpUndefinedClassInspection */
+/** @noinspection PhpParamsInspection */
+/** @noinspection PhpUndefinedMethodInspection */
+
 namespace Pepsite;
 
+use Pepsite\Controller\UserController;
 use Zend\Db\Adapter\AdapterInterface;
 use Zend\Db\ResultSet\ResultSet;
 use Zend\Db\TableGateway\TableGateway;
@@ -38,6 +43,12 @@ class Module implements ConfigProviderInterface
             'factories' => [
                 Controller\IndexController::class => function ($container) {
                     return new Controller\IndexController($container->get(Model\UsersTable::class));
+                },
+                Controller\UserController::class => function ($container) {
+                    return new Controller\UserController($container->get(Model\UsersTable::class));
+                },
+                Controller\AuthController::class => function ($container) {
+                    return new Controller\AuthController($container->get(Model\UsersTable::class));
                 }
             ]
         ];

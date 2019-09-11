@@ -17,7 +17,7 @@ class IndexController extends AbstractActionController
     public function indexAction()
     {
         return new ViewModel([
-            'users' => $this->usersTable->getUser('sono'),
+            'topUsers' => $this->usersTable->getTopUsers()
         ]);
     }
 }

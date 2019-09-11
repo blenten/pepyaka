@@ -1,8 +1,8 @@
 <?php
 namespace Pepsite\Model;
 
-use RuntimeException;
 use Zend\Db\TableGateway\TableGatewayInterface;
+use Zend\Db\Sql\Select;
 use Pepsite\Entity\User;
 
 class UsersTable
@@ -20,9 +20,15 @@ class UsersTable
         $rowset = $this->tableGateway->select(['login' => $login]);
         $row = $rowset->current();
         if (! $row) {
-            throw new RuntimeException("Could not find row with identifier {$login}");
+            return null;
         }
-
         return $row;
+    }
+
+    public function getTopUsers()
+    {
+        return $this->tableGateway->select(function (Select $select) {
+            $select->order('votes DESC')->limit(15);
+        });
     }
 }

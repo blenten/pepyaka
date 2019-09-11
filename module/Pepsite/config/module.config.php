@@ -54,12 +54,6 @@ return [
             ],
         ],
     ],
-//    'controllers' => [
-//        'factories' => [
-//            Controller\AuthController::class  => InvokableFactory::class,
-//            Controller\UserController::class  => InvokableFactory::class,
-//        ],
-//    ],
     'view_manager' => [
         'display_not_found_reason' => true,
         'display_exceptions'       => true,

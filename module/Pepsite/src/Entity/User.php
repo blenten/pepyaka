@@ -14,4 +14,13 @@ class User extends DBEntity
     {
         return $this->login;
     }
+
+    public function getData()
+    {
+        return [
+            'votes' => $this->votes,
+            'info'  => $this->info,
+            'sex'   => $this->sex,
+        ];
+    }
 }

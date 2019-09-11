@@ -1,0 +1,14 @@
+<?php
+$this->headTitle('Index');
+?>
+<table class="table">
+    <?php foreach ($this->topUsers as $user) : ?>
+    <tr>
+        <td>
+            <a href="<?= $this->url('user', ['id' => $user->getLogin()]) ?>">
+                <h2><?= $user->getLogin() ?></h2>
+            </a>
+        </td>
+    <?php endforeach; ?>
+    </tr>
+</table>

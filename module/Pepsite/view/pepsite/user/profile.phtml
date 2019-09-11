@@ -1,0 +1,13 @@
+<?php
+$title = $this->user->getLogin();
+$this->headTitle($title);
+?>
+<h1><?= $this->escapeHtml($title) ?></h1>
+<table class="table">
+    <?php foreach ($this->user->getData() as $key => $val) : ?>
+        <tr>
+            <td><?= $key ?></td>
+            <td><?= $val ?></td>
+        </tr>
+    <?php endforeach; ?>
+</table>
