@@ -8,7 +8,7 @@ class VotesTable extends DBTable
 {
     public static function makeFactories()
     {
-        return parent::mkfcs('votes', self::class, Vote::class);
+        return parent::makeFactoriesFor('votes', self::class, Vote::class);
     }
 
     public function getUserVotes($userId, $rowLimit = null)

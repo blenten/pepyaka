@@ -17,7 +17,7 @@ abstract class DBTable
 
     abstract public static function makeFactories();
 
-    protected static function mkfcs($tableName, $tableClass, $entity)
+    protected static function makeFactoriesFor($tableName, $tableClass, $entity)
     {
         $gatewayClass = $tableClass . 'Gateway';
         return [

@@ -8,7 +8,7 @@ class UsersTable extends DBTable
 {
     public static function makeFactories()
     {
-        return parent::mkfcs('users', self::class, User::class);
+        return parent::makeFactoriesFor('users', self::class, User::class);
     }
 
     public function getUser($login)

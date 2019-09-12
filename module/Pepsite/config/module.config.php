@@ -3,7 +3,6 @@ namespace Pepsite;
 
 use Zend\Router\Http\Literal;
 use Zend\Router\Http\Segment;
-//use Zend\ServiceManager\Factory\InvokableFactory;
 
 return [
     'router' => [
@@ -38,6 +37,16 @@ return [
                     ],
                 ],
             ],
+            'logout' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route'    => '/logout',
+                    'defaults' => [
+                        'controller' => Controller\AuthController::class,
+                        'action'     => 'logout',
+                    ],
+                ],
+            ],
             'user' => [
                 'type' => Segment::class,
                 'options' => [
@@ -55,8 +64,6 @@ return [
         ],
     ],
     'view_manager' => [
-        'display_not_found_reason' => true,
-        'display_exceptions'       => true,
         'doctype'                  => 'HTML5',
         'not_found_template'       => 'error/404',
         'exception_template'       => 'error/index',
@@ -70,4 +77,7 @@ return [
             __DIR__ . '/../view',
         ],
     ],
+    'session_containers' => [
+        'UserAuthContainer',
+    ]
 ];

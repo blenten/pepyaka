@@ -1,6 +1,9 @@
 <?php
 $this->headTitle('Index');
 ?>
+<?php if (!is_null($this->user)) : ?>
+<h1>Wellcome, <?= $this->user ?></h1>
+<?php endif; ?>
 <table class="table">
     <?php foreach ($this->topUsers as $user) : ?>
     <tr>

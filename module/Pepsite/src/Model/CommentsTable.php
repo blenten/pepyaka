@@ -8,7 +8,7 @@ class CommentsTable extends DBTable
 {
     public static function makeFactories()
     {
-        return parent::mkfcs('comments', self::class, Comment::class);
+        return parent::makeFactoriesFor('comments', self::class, Comment::class);
     }
 
     public function getCommentsOnPage($targetUserId, $rowLimit = null)

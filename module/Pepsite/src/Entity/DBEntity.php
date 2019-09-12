@@ -6,7 +6,7 @@ abstract class DBEntity
     public function exchangeArray($data)
     {
         foreach (array_keys(get_object_vars($this)) as $property) {
-            $this->$property = !empty($data[$property]) ? $data[$property] : null;
+            $this->$property = $data[$property] ?? null;
         }
     }
 
