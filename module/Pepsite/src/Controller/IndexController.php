@@ -23,7 +23,7 @@ class IndexController extends AbstractActionController
     {
         return new ViewModel([
             'topUsers' => $this->usersTable->getTopUsers(),
-            'user'     => $this->sessionContainer->userLogin ?? null,
+            'user'     => $this->sessionContainer->user ?? null,
         ]);
     }
 }

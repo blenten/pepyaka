@@ -5,6 +5,7 @@
 namespace Pepsite\Controller;
 
 use Pepsite\Entity\User;
+use Pepsite\Form\LoginForm;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 use Zend\Session\Container;
@@ -33,19 +34,18 @@ class AuthController extends AbstractActionController
 
     public function registerAction()
     {
-        if (isset($this->sessionContainer->userLogin)) {
+        if (isset($this->sessionContainer->user)) {
             return $this->redirect()->toRoute('home');
         }
         $form = new RegistrationForm($this->dbAdapter);
         if ($this->getRequest()->isPost()) {
-            $data = $this->params()->fromPost();
-            $form->setData($data);
+            $form->setData($this->params()->fromPost());
             if ($form->isValid()) {
                 $data = $form->getData();
                 $user = new User();
                 $user->exchangeArray($data);
                 $this->usersTable->saveUser($user);
-                $this->sessionContainer->userLogin = $data['login'];
+                $this->sessionContainer->user = $user;
                 return $this->redirect()->toRoute('user', ['id' => $data['login']]);
             }
         }
@@ -56,13 +56,24 @@ class AuthController extends AbstractActionController
 
     public function loginAction()
     {
-        if (isset($this->sessionContainer->userLogin)) {
+        if (isset($this->sessionContainer->user)) {
             return $this->redirect()->toRoute('home');
         }
+        $form = new LoginForm($this->dbAdapter);
         if ($this->getRequest()->isPost()) {
-            return $this->redirect()->toRoute('home');
+            $form->setData($this->params()->fromPost());
+            if ($form->isValid()) {
+                $data = $form->getData();
+                $user = $this->usersTable->getUser($data['login']);
+                if ($data['password'] === $user->getPassword()) {
+                    $this->sessionContainer->user = $user;
+                    return $this->redirect()->toRoute('home');
+                }
+            }
         }
-        return new ViewModel();
+        return new ViewModel([
+            'form' => $form
+        ]);
     }
 
     public function logoutAction()
