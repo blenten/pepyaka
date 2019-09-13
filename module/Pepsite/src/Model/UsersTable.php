@@ -28,4 +28,19 @@ class UsersTable extends DBTable
             $select->order('votes DESC')->limit(15);
         });
     }
+
+    public function saveUser(User $user)
+    {
+        $login = $user->getLogin();
+        $data = [
+            'password' => $user->getPassword(),
+            'sex'      => $user->getSex(),
+            'avatar'   => $user->getAvatar()
+        ];
+        if (is_null($this->getUser($login))) {
+            $data['login'] = $login;
+            return $this->tableGateway->insert($data);
+        }
+        return $this->tableGateway->update($data, ['login' => $login]);
+    }
 }

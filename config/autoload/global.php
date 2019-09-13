@@ -1,5 +1,5 @@
 <?php
-// TODO: research validation
+// TODO: research session validation
 use Zend\Session\Storage\SessionArrayStorage;
 use Zend\Session\Validator\RemoteAddr;
 use Zend\Session\Validator\HttpUserAgent;

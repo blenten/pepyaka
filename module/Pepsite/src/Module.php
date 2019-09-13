@@ -32,11 +32,6 @@ class Module implements ConfigProviderInterface
                 Model\UsersTable::makeFactories(),
                 Model\VotesTable::makeFactories(),
                 Model\CommentsTable::makeFactories(),
-                [
-                    Form\RegistrationForm::class => function ($container) {
-                        return new Form\RegistrationForm($container->get(AdapterInterface::class));
-                    },
-                ]
             )
         ];
     }
@@ -61,7 +56,8 @@ class Module implements ConfigProviderInterface
                     return new Controller\AuthController(
                         $container->get(Model\UsersTable::class),
                         $container->get('UserAuthContainer'),
-                        $container->get(SessionManager::class)
+                        $container->get(SessionManager::class),
+                        $container->get(AdapterInterface::class),
                     );
                 }
             ]

@@ -15,12 +15,28 @@ class User extends DBEntity
         return $this->login;
     }
 
-    public function getData()
+    public function getPassword()
     {
-        return [
-            'votes' => $this->votes,
-            'info'  => $this->info,
-            'sex'   => $this->sex,
-        ];
+        return $this->password;
+    }
+
+    public function getVotes()
+    {
+        return $this->votes;
+    }
+
+    public function getSex()
+    {
+        return $this->sex;
+    }
+
+    public function getInfo()
+    {
+        return $this->info;
+    }
+
+    public function getAvatar()
+    {
+        return $this->avatar;
     }
 }

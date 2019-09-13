@@ -1,0 +1,80 @@
+<?php
+/** @noinspection PhpUndefinedMethodInspection */
+$this->headTitle('Регистрация');
+
+$login = $this->form->get('login');
+$login->setAttribute('class', 'form-control');
+//$login->setAttribute('placeholder', 'Artist');
+
+$password = $this->form->get('password');
+$password->setAttribute('id', 'password');
+$password->setAttribute('class', 'form-control');
+
+$avatar = $this->form->get('avatar');
+$avatar->setAttribute('class', 'form-control');
+
+$sex = $this->form->get('sex');
+$sex->setAttribute('class', 'form-control');
+
+$captcha = $this->form->get('captcha');
+
+$submit = $this->form->get('submit');
+$submit->setValue('Зарегистрироваться');
+$submit->setAttribute('class', 'btn btn-primary');
+
+$this->form->prepare();
+?>
+<div class="d-flex flex-column align-items-center">
+    <?= $this->form()->openTag($this->form); ?>
+    <div class="form-group">
+        <?= $this->formLabel($login) ?>
+        <?= $this->formElement($login) ?>
+        <?= $this->formElementErrors()->render($login, ['class' => 'help-block']) ?>
+    </div>
+
+    <div class="form-group">
+        <?= $this->formLabel($password) ?>
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="w-75">
+                <?= $this->formElement($password) ?>
+                <?= $this->formElementErrors()->render($password, ['class' => 'help-block']) ?>
+            </div>
+            <div>
+                <input type="checkbox" id="showPass" onclick="togglePass()">
+                <label for="showPass">Показать пароль</label>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="form-group">
+        <?= $this->formLabel($avatar) ?>
+        <?= $this->formFile($avatar) ?>
+        <?= $this->formElementErrors()->render($avatar, ['class' => 'help-block']) ?>
+    </div>
+
+    <div class="form-group">
+        <?= $this->formLabel($sex) ?>
+        <?= $this->formSelect($sex) ?>
+        <?= $this->formElementErrors()->render($sex, ['class' => 'help-block']) ?>
+    </div>
+
+    <div class="form-group">
+        <?= $this->formLabel($captcha) ?>
+        <?= $this->formCaptcha($captcha) ?>
+        <?= $this->formElementErrors()->render($captcha, ['class' => 'help-block']) ?>
+    </div>
+    <?= $this->formSubmit($submit); ?>
+    <?= $this->form()->closeTag(); ?>
+</div>
+
+<script>
+    function togglePass() {
+        let pass = document.getElementById('password');
+        if (pass.type === 'password') {
+            pass.type = 'text';
+        } else {
+            pass.type = 'password';
+        }
+    }
+</script>
