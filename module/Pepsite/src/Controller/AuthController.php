@@ -42,8 +42,7 @@ class AuthController extends AbstractActionController
             $form->setData($this->params()->fromPost());
             if ($form->isValid()) {
                 $data = $form->getData();
-                $user = new User();
-                $user->exchangeArray($data);
+                $user = new User($data);
                 $this->usersTable->saveUser($user);
                 $this->sessionContainer->user = $user;
                 return $this->redirect()->toRoute('user', ['id' => $data['login']]);
@@ -59,7 +58,7 @@ class AuthController extends AbstractActionController
         if (isset($this->sessionContainer->user)) {
             return $this->redirect()->toRoute('home');
         }
-        $form = new LoginForm($this->dbAdapter);
+        $form = new LoginForm();
         if ($this->getRequest()->isPost()) {
             $form->setData($this->params()->fromPost());
             if ($form->isValid()) {

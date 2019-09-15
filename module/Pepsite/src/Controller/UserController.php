@@ -21,7 +21,7 @@ class UserController extends AbstractActionController
 
     public function profileAction()
     {
-        $userId = $this->params()->fromRoute('id');
+        $userId = $this->params()->fromRoute('login');
         $user = $this->usersTable->getUser($userId);
         if (is_null($user)) {
             return $this->notFoundAction();
@@ -33,11 +33,11 @@ class UserController extends AbstractActionController
 
     public function editAction()
     {
-        $userId = $this->params()->fromRoute('id');
+        $userId = $this->params()->fromRoute('login');
         $user = $this->usersTable->getUser($userId);
         if (is_null($user)) {
             return $this->notFoundAction();
         }
-        echo "user/edit {$this->params()->fromRoute('id')} сасай";
+        echo "user/edit {$this->params()->fromRoute('login')} сасай";
     }
 }

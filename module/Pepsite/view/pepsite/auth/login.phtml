@@ -1,0 +1,39 @@
+<?php
+/** @noinspection PhpUndefinedMethodInspection */
+$this->headTitle('Вход');
+
+$login = $this->form->get('login');
+$login->setAttribute('class', 'form-control mb-3');
+
+$password = $this->form->get('password');
+$password->setAttribute('class', 'form-control mb-3');
+
+$captcha = $this->form->get('captcha');
+
+$submit = $this->form->get('submit');
+$submit->setAttribute('class', 'btn btn-lg btn-primary btn-block mt-4');
+
+$this->form->setAttribute('class', 'form-signin');
+$this->form->prepare();
+?>
+
+<div class="text-center w-25 mx-auto">
+    <?= $this->form()->openTag($this->form); ?>
+        <img class="mb-4" src="https://getbootstrap.com/docs/4.0/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
+        <h1 class="h3 mb-3 font-weight-normal">Вход</h1>
+
+        <label for="login" class="sr-only">Логин</label>
+        <?= $this->formElement($login); ?>
+        <?= $this->formElementErrors()->render($login, ['class' => 'error-block']); ?>
+
+        <label for="inputPassword" class="sr-only">Пароль</label>
+        <?= $this->formPassword($password); ?>
+        <?= $this->formElementErrors()->render($password, ['class' => 'error-block']); ?>
+
+
+        <?= $this->formCaptcha($captcha); ?>
+        <?= $this->formElementErrors()->render($captcha, ['class' => 'error-block']); ?>
+
+        <?= $this->formSubmit($submit); ?>
+    <?= $this->form()->closeTag(); ?>
+</div>

@@ -50,10 +50,10 @@ return [
             'user' => [
                 'type' => Segment::class,
                 'options' => [
-                    'route' => '/user/:id[/:action]',
+                    'route' => '/user/:login[/:action]',
                     'constraints' => [
-                        'id'     => '[a-zA-Z0-9_-]+',
-                        'action' => '[a-z]+',
+                        'login'     => '[a-zA-Z0-9_-]+',
+                        'action'    => '[a-z]+',
                     ],
                     'defaults' => [
                         'controller' => Controller\UserController::class,
@@ -64,6 +64,8 @@ return [
         ],
     ],
     'view_manager' => [
+        'display_not_found_reason' => false,
+        'display_exceptions'       => false,
         'doctype'                  => 'HTML5',
         'not_found_template'       => 'error/404',
         'exception_template'       => 'error/index',

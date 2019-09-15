@@ -5,7 +5,7 @@
     <?php foreach ($this->topUsers as $user) : ?>
     <tr>
         <td>
-            <a href="<?= $this->url('user', ['id' => $user->getLogin()]) ?>">
+            <a href="<?= $this->url('user', ['login' => $user->getLogin()]) ?>">
                 <h2><?= $user->getLogin() ?></h2>
             </a>
         </td>

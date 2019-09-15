@@ -19,7 +19,8 @@
         "zendframework/zend-db": "^2.8.1",
         "zendframework/zend-mvc-form": "^1.0",
         "zendframework/zend-session": "2.9.x-dev",
-        "zendframework/zend-captcha": "2.10.x-dev"
+        "zendframework/zend-captcha": "2.10.x-dev",
+        "zendframework/zend-crypt": "3.4.x-dev"
     },
     "autoload": {
         "psr-4": {

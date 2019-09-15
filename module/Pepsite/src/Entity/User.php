@@ -6,9 +6,12 @@ class User extends DBEntity
     protected $login;
     protected $password;
     protected $votes;
-    protected $sex;
-    protected $info;
+    protected $gender;
     protected $avatar;
+    protected $registrationDate;
+
+    public const GENDER_MALE = 'M';
+    public const GENDER_FEMALE = 'F';
 
     public function getLogin()
     {
@@ -25,18 +28,36 @@ class User extends DBEntity
         return $this->votes;
     }
 
-    public function getSex()
+    public function setVotes($votes)
     {
-        return $this->sex;
+        $this->votes = $votes;
     }
 
-    public function getInfo()
+    public function getGender()
     {
-        return $this->info;
+        return $this->gender;
+    }
+
+    public function setGender($gender)
+    {
+        if (!in_array($gender, [self::GENDER_MALE, self::GENDER_FEMALE])) {
+            throw new \Exception("Wrong gender value: {$gender}");
+        }
+        $this->gender = $gender;
     }
 
     public function getAvatar()
     {
         return $this->avatar;
+    }
+
+    public function setAvatar($avatar)
+    {
+        $this->avatar = $avatar;
+    }
+
+    public function getRegistrationDate()
+    {
+        return $this->registrationDate;
     }
 }

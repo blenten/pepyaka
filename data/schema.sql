@@ -24,15 +24,15 @@ CREATE TABLE IF NOT EXISTS `users` (
   `login` varchar(100) NOT NULL,
   `password` varchar(250) NOT NULL,
   `votes` int(11) NOT NULL DEFAULT 0,
-  `sex` enum('M','F') NOT NULL DEFAULT 'M',
-  `info` text DEFAULT NULL,
+  `gender` enum('M','F') NOT NULL DEFAULT 'M',
   `avatar` varchar(1024) DEFAULT NULL,
+  `registrationDate` date DEFAULT curdate(),
   PRIMARY KEY (`login`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE IF NOT EXISTS `votes` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `effect` enum('+','-') NOT NULL,
+  `effect` enum('+','-','0') NOT NULL,
   `voteTime` datetime NOT NULL DEFAULT current_timestamp(),
   `voter` varchar(250) DEFAULT NULL,
   `voteFor` varchar(250) DEFAULT NULL,

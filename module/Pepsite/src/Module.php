@@ -14,9 +14,6 @@ class Module implements ConfigProviderInterface
     {
         $application = $event->getApplication();
         $serviceManager = $application->getServiceManager();
-
-        // The following line instantiates the SessionManager and automatically
-        // makes the SessionManager the 'default' one. -__-
         $serviceManager->get(SessionManager::class);
     }
 

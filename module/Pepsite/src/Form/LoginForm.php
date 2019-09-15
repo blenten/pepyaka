@@ -1,6 +1,7 @@
 <?php
 namespace Pepsite\Form;
 
+use Zend\Captcha\Dumb;
 use Zend\Form\Form;
 use Zend\Validator\Db\RecordExists;
 use Zend\Validator\Regex;
@@ -8,13 +9,11 @@ use Zend\Validator\StringLength;
 
 class LoginForm extends Form
 {
-    private $dbAdapter;
 
-    public function __construct($dbAdapter)
+    public function __construct()
     {
         parent::__construct('login-form');
 
-        $this->dbAdapter = $dbAdapter;
         $this->setAttribute('method', 'post');
 
         $this->addElements();
@@ -28,6 +27,11 @@ class LoginForm extends Form
             'name' => 'login',
             'options' => [
                 'label' => 'Логин',
+            ],
+            'attributes' => [
+                'required'    => true,
+                'autofocus'   => true,
+                'placeholder' => 'Логин'
             ]
         ]);
 
@@ -36,18 +40,25 @@ class LoginForm extends Form
             'name' => 'password',
             'options' => [
                 'label' => 'Пароль',
+            ],
+            'attributes' => [
+                'required'    => true,
+                'placeholder' => 'Пароль'
             ]
         ]);
 
         $this->add([
             'type'  => 'captcha',
-            'name' => 'captcha',
+            'name'  => 'captcha',
             'options' => [
-                'label' => 'Human check',
+                'label'   => 'Human check',
                 'captcha' => [
-                    'class' => 'Dumb',
-                    'wordLen' => 6,
+                    'class' => Dumb::class,
+                    'wordLen'    => 6,
                     'expiration' => 600,
+                    'messages' => [
+                        Dumb::BAD_CAPTCHA => 'Капча не валидна'
+                    ]
                 ],
             ],
         ]);
@@ -55,6 +66,9 @@ class LoginForm extends Form
         $this->add([
             'type' => 'submit',
             'name' => 'submit',
+            'attributes' => [
+                'value' => 'Войти'
+            ]
         ]);
     }
 
@@ -69,16 +83,7 @@ class LoginForm extends Form
                 ['name' => 'StringTrim'],
                 ['name' => 'StripTags'],
             ],
-            'validators' => [
-                [
-                    'name' => RecordExists::class,
-                    'options' => [
-                        'table'   => 'users',
-                        'field'   => 'login',
-                        'adapter' => $this->dbAdapter,
-                    ],
-                ]
-            ],
+            'validators' => [],
         ]);
 
         $inputFilter->add([

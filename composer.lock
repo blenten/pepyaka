@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "692b3688e7d0c7cc655f2385004a8504",
+    "content-hash": "605859bf5b38b7269fd6a15a13f7eede",
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -353,6 +353,58 @@
                 "zf"
             ],
             "time": "2019-06-08T18:58:54+00:00"
+        },
+        {
+            "name": "zendframework/zend-crypt",
+            "version": "dev-develop",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zendframework/zend-crypt.git",
+                "reference": "cf6489f808dd8e4c5b53aadb846e3bedb30cf969"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/zendframework/zend-crypt/zipball/cf6489f808dd8e4c5b53aadb846e3bedb30cf969",
+                "reference": "cf6489f808dd8e4c5b53aadb846e3bedb30cf969",
+                "shasum": ""
+            },
+            "require": {
+                "container-interop/container-interop": "^1.2",
+                "ext-mbstring": "*",
+                "php": "^5.6 || ^7.0",
+                "zendframework/zend-math": "^3.0",
+                "zendframework/zend-stdlib": "^2.7.7 || ^3.1"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^5.7.27 || ^6.5.8 || ^7.1.2",
+                "zendframework/zend-coding-standard": "~1.0.0"
+            },
+            "suggest": {
+                "ext-openssl": "Required for most features of Zend\\Crypt"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.3.x-dev",
+                    "dev-develop": "3.4.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Zend\\Crypt\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "Strong cryptography tools and password hashing",
+            "keywords": [
+                "ZendFramework",
+                "crypt",
+                "zf"
+            ],
+            "time": "2019-05-14T20:24:43+00:00"
         },
         {
             "name": "zendframework/zend-db",
@@ -1722,7 +1774,8 @@
     "stability-flags": {
         "zendframework/zend-component-installer": 20,
         "zendframework/zend-session": 20,
-        "zendframework/zend-captcha": 20
+        "zendframework/zend-captcha": 20,
+        "zendframework/zend-crypt": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,

@@ -16,10 +16,7 @@ class UsersTable extends DBTable
         $login = (string) $login;
         $rowset = $this->tableGateway->select(['login' => $login]);
         $row = $rowset->current();
-        if (! $row) {
-            return null;
-        }
-        return $row;
+        return $row ? $row : null;
     }
 
     public function getTopUsers()
@@ -29,18 +26,27 @@ class UsersTable extends DBTable
         });
     }
 
-    public function saveUser(User $user)
+    public function createUser(User $user)
     {
-        $login = $user->getLogin();
         $data = [
+            'login'    => $user->getLogin(),
             'password' => $user->getPassword(),
-            'sex'      => $user->getSex(),
+            'votes'    => 0,
+            'gender'   => $user->getGender(),
             'avatar'   => $user->getAvatar()
         ];
-        if (is_null($this->getUser($login))) {
-            $data['login'] = $login;
-            return $this->tableGateway->insert($data);
-        }
+        return $this->tableGateway->insert($data);
+    }
+
+    public function updateUser(User $user)
+    {
+        $login = (string) $user->getLogin();
+        $data = [
+            'votes'  => $user->getVotes(),
+            'gender' => $user->getGender(),
+            'avatar' => $user->getAvatar()
+        ];
+
         return $this->tableGateway->update($data, ['login' => $login]);
     }
 }
