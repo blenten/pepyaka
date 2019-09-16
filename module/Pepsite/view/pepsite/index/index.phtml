@@ -1,14 +1,13 @@
-<?php if (!is_null($this->user)) : ?>
-<h1>Wellcome, <?= $this->user->getLogin() ?></h1>
-<?php endif; ?>
-<table class="table">
-    <?php foreach ($this->topUsers as $user) : ?>
-    <tr>
-        <td>
-            <a href="<?= $this->url('user', ['login' => $user->getLogin()]) ?>">
-                <h2><?= $user->getLogin() ?></h2>
-            </a>
-        </td>
+<?= $this->mainNav()->render() ?>
+<div class="d-flex flex-column w-25">
+    <ul class="list-unstyled">
+    <?php foreach ($this->topUsers as $topUser) : ?>
+        <li>
+            <div class="d-flex justify-content-between">
+                <a href="<?= $this->url('user', ['login' => $topUser->getLogin()]) ?>"><p><?= $topUser->getLogin() ?></p></a>
+                <p><?= $topUser->getVotes() ?></p>
+            </div>
+        </li>
     <?php endforeach; ?>
-    </tr>
-</table>
+    </ul>
+</div>

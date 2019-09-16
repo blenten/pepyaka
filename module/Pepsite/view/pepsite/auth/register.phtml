@@ -6,10 +6,11 @@ $login = $this->form->get('login');
 $login->setAttribute('class', 'form-control');
 
 $password = $this->form->get('password');
+$password->setAttribute('id', 'password');
 $password->setAttribute('class', 'form-control');
 
 $avatar = $this->form->get('avatar');
-$avatar->setAttribute('class', 'form-control');
+$avatar->setAttribute('class', 'form-control-file');
 
 $gender = $this->form->get('gender');
 $gender->setAttribute('class', 'form-control');
@@ -19,56 +20,65 @@ $captcha = $this->form->get('captcha');
 $submit = $this->form->get('submit');
 $submit->setAttribute('class', 'btn btn-lg btn-primary btn-block mt-4');
 
+$messages = $this->form->getMessages();
 $this->form->setAttribute('class', 'form-signin');
 $this->form->prepare();
 ?>
-<div class="d-flex flex-column align-items-center">
-    <?= $this->form()->openTag($this->form); ?>
-        <h1 class="h3 mb-3 font-weight-normal">Регистрация</h1>
-        <div class="form-group">
+<div class="text-center">
+    <h1 class="h3 font-weight-normal">Регистрация</h1>
+</div>
+<div class="d-flex justify-content-center">
+    <div class="d-inline-flex flex-column align-items-center mx-auto">
+        <?php if (!empty($messages)) : ?>
+        <div class="d-flex flex-column align-items-start alert alert-danger">
             <?php
-            foreach ($this->form as $element) {
-                echo $this->formElementErrors($element, ['class' => 'help-block']);
-//                echo var_dump($element);
-            }
+            foreach (array_values($messages) as $elementMessages):
+                foreach (array_values($elementMessages) as $message) : ?>
+                    <div class="d-inline-block py-1"><?= $message ?></div>
+                <?php
+                endforeach;
+            endforeach;
             ?>
         </div>
-        <div class="form-group my-2">
-            <?= $this->formLabel($login) ?>
-            <?= $this->formElement($login) ?>
-        </div>
+        <?php endif; ?>
 
-        <div class="form-group mb-2">
-            <?= $this->formLabel($password) ?>
-            <div class="d-flex justify-content-between align-items-center">
-                <div class="w-75">
-                    <?= $this->formElement($password) ?>
-                </div>
-                <div>
-                    <input type="checkbox" id="showPass" onclick="togglePass()">
-                    <label for="showPass">Показать пароль</label>
+        <?= $this->form()->openTag($this->form); ?>
+            <div class="form-group my-2">
+                <?= $this->formLabel($login) ?>
+                <?= $this->formElement($login) ?>
+            </div>
+
+            <div class="form-group mb-2">
+                <?= $this->formLabel($password) ?>
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="w-75">
+                        <?= $this->formElement($password) ?>
+                    </div>
+                    <div>
+                        <input type="checkbox" id="showPass" onclick="togglePass()">
+                        <label for="showPass">Показать пароль</label>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <div class="form-group mb-2">
-            <?= $this->formLabel($avatar) ?>
-            <?= $this->formFile($avatar) ?>
-        </div>
+            <div class="form-group mb-2">
+                <?= $this->formLabel($avatar) ?>
+                <?= $this->formFile($avatar) ?>
+            </div>
 
-        <div class="form-group mb-2">
-            <?= $this->formLabel($gender) ?>
-            <?= $this->formSelect($gender) ?>
-        </div>
+            <div class="form-group mb-2">
+                <?= $this->formLabel($gender) ?>
+                <?= $this->formSelect($gender) ?>
+            </div>
 
-        <div class="form-group mb-2">
-            <?= $this->formLabel($captcha) ?>
-            <?= $this->formCaptcha($captcha) ?>
-        </div>
-        <?= $this->formSubmit($submit); ?>
-    <?= $this->form()->closeTag(); ?>
+            <div class="form-group mb-2">
+                <?= $this->formLabel($captcha) ?>
+                <?= $this->formCaptcha($captcha) ?>
+            </div>
+            <?= $this->formSubmit($submit); ?>
+        <?= $this->form()->closeTag(); ?>
+    </div>
 </div>
-
 <script>
     function togglePass() {
         let pass = document.getElementById('password');

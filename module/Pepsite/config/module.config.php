@@ -80,6 +80,6 @@ return [
         ],
     ],
     'session_containers' => [
-        'UserAuthContainer',
-    ]
+        Service\IdentityManager::SESSION_CONTAINER,
+    ],
 ];

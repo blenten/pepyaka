@@ -18,21 +18,32 @@ $this->form->prepare();
 ?>
 
 <div class="text-center w-25 mx-auto">
-    <?= $this->form()->openTag($this->form); ?>
-        <img class="mb-4" src="https://getbootstrap.com/docs/4.0/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
-        <h1 class="h3 mb-3 font-weight-normal">Вход</h1>
+    <img class="mb-4" src="https://getbootstrap.com/docs/4.0/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
+    <h1 class="h3 mb-3 font-weight-normal">Вход</h1>
+</div>
 
+<ul class="text-center list-unstyled m-0">
+    <?php
+    foreach (array_values($this->form->getMessages()) as $elementMessages):
+        foreach (array_values($elementMessages) as $message) :
+    ?>
+    <li><?= $message ?></li>
+    <?php
+        endforeach;
+        endforeach;
+    ?>
+</ul>
+
+<div class="text-center w-25 mx-auto">
+    <?= $this->form()->openTag($this->form); ?>
         <label for="login" class="sr-only">Логин</label>
         <?= $this->formElement($login); ?>
-        <?= $this->formElementErrors()->render($login, ['class' => 'error-block']); ?>
 
         <label for="inputPassword" class="sr-only">Пароль</label>
         <?= $this->formPassword($password); ?>
-        <?= $this->formElementErrors()->render($password, ['class' => 'error-block']); ?>
 
 
         <?= $this->formCaptcha($captcha); ?>
-        <?= $this->formElementErrors()->render($captcha, ['class' => 'error-block']); ?>
 
         <?= $this->formSubmit($submit); ?>
     <?= $this->form()->closeTag(); ?>

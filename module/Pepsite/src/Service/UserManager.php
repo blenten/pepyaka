@@ -8,6 +8,7 @@ use Pepsite\Entity\Vote;
 use Pepsite\Model\UsersTable;
 use Pepsite\Model\VotesTable;
 use Zend\Crypt\Password\Bcrypt;
+use Zend\Db\ResultSet\ResultSet;
 
 class UserManager
 {
@@ -23,17 +24,17 @@ class UserManager
         $this->votesTable = $votesTable;
     }
 
-    public function getUser($login)
+    public function getUser($login) : ?User
     {
         return $this->userTable->getUser($login);
     }
 
-    public function getTopUsers()
+    public function getTopUsers() : ResultSet
     {
         return $this->userTable->getTopUsers();
     }
 
-    public function getValidUser($login, $password)
+    public function getValidUser($login, $password) : ?User
     {
         $user = $this->userTable->getUser($login);
         if (!is_null($user)) {
@@ -44,7 +45,7 @@ class UserManager
         return null;
     }
 
-    public function validatePassword(User $user, $password)
+    public function validatePassword(User $user, $password) : bool
     {
         $bcrypt = new Bcrypt();
         if ($bcrypt->verify($password, $user->getPassword())) {
@@ -53,31 +54,32 @@ class UserManager
         return false;
     }
 
-    public function addUser(array $data)
+    public function addUser(array $data) : User
     {
         $bcrypt = new Bcrypt();
         $data['password'] = $bcrypt->create($data['password']);
         $user = new User();
         $user->exchangeArray($data);
         $this->userTable->createUser($user);
+        return $user;
     }
 
-    public function updateUser(User $user)
+    public function updateUser(User $user) : void
     {
         $this->userTable->updateUser($user);
     }
 
-    public function upvote($voterLogin, $targetLogin)
+    public function upvote($voterLogin, $targetLogin) : bool
     {
         return $this->vote($voterLogin, $targetLogin, Vote::VOTE_POSITIVE);
     }
 
-    public function downvote($voterLogin, $targetLogin)
+    public function downvote($voterLogin, $targetLogin) : bool
     {
         return $this->vote($voterLogin, $targetLogin, Vote::VOTE_NEGATIVE);
     }
 
-    public function unvote($voterLogin, $targetLogin)
+    public function unvote($voterLogin, $targetLogin) : bool
     {
         return $this->vote($voterLogin, $targetLogin, Vote::VOTE_NEUTRAL);
     }

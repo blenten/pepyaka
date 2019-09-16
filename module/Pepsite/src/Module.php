@@ -12,9 +12,7 @@ class Module implements ConfigProviderInterface
 {
     public function onBootstrap(MvcEvent $event)
     {
-        $application = $event->getApplication();
-        $serviceManager = $application->getServiceManager();
-        $serviceManager->get(SessionManager::class);
+        $application = $event->getApplication()->getServiceManager()->get(SessionManager::class);
     }
 
     public function getConfig()
@@ -29,6 +27,20 @@ class Module implements ConfigProviderInterface
                 Model\UsersTable::makeFactories(),
                 Model\VotesTable::makeFactories(),
                 Model\CommentsTable::makeFactories(),
+                [
+                    Service\UserManager::class => function ($container) {
+                        return new Service\UserManager(
+                            $container->get(Model\UsersTable::class),
+                            $container->get(Model\VotesTable::class)
+                        );
+                    },
+                    Service\IdentityManager::class => function ($container) {
+                        return new Service\IdentityManager(
+                            $container->get(Service\IdentityManager::SESSION_CONTAINER),
+                            $container->get(SessionManager::class)
+                        );
+                    }
+                ]
             )
         ];
     }
@@ -39,24 +51,36 @@ class Module implements ConfigProviderInterface
             'factories' => [
                 Controller\IndexController::class => function ($container) {
                     return new Controller\IndexController(
-                        $container->get(Model\UsersTable::class),
-                        $container->get('UserAuthContainer'),
+                        $container->get(Service\UserManager::class),
                     );
                 },
                 Controller\UserController::class => function ($container) {
                     return new Controller\UserController(
-                        $container->get(Model\UsersTable::class),
-                        $container->get('UserAuthContainer')
+                        $container->get(Service\UserManager::class),
+                        $container->get(Service\IdentityManager::class)
                     );
                 },
                 Controller\AuthController::class => function ($container) {
                     return new Controller\AuthController(
-                        $container->get(Model\UsersTable::class),
-                        $container->get('UserAuthContainer'),
-                        $container->get(SessionManager::class),
-                        $container->get(AdapterInterface::class),
+                        $container->get(Service\UserManager::class),
+                        $container->get(Service\IdentityManager::class),
+                        $container->get(AdapterInterface::class)
                     );
                 }
+            ]
+        ];
+    }
+
+    public function getViewHelperConfig()
+    {
+        return [
+            'factories' => [
+                ViewHelper\Navbar::class => function ($container) {
+                    return new ViewHelper\Navbar($container->get(Service\IdentityManager::class));
+                }
+            ],
+            'aliases' => [
+                'mainNav' => ViewHelper\Navbar::class,
             ]
         ];
     }

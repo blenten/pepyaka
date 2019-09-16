@@ -2,27 +2,25 @@
 namespace Pepsite\Controller;
 
 use Zend\Mvc\Controller\AbstractActionController;
+use Pepsite\Service\UserManager;
+use Pepsite\Service\IdentityManager;
 use Zend\View\Model\ViewModel;
-use Zend\Session\Container;
-use Pepsite\Model\UsersTable;
 
 class UserController extends AbstractActionController
 {
-    private $usersTable;
-    private $votesTable;
-    private $commentsTable;
-    private $sessionContainer;
+    private $userManager;
+    private $identityManager;
 
-    public function __construct(UsersTable $usersTable, Container $sessionContainer)
+    public function __construct(UserManager $userManager, IdentityManager $identityManager)
     {
-        $this->usersTable = $usersTable;
-        $this->sessionContainer = $sessionContainer;
+        $this->userManager = $userManager;
+        $this->identityManager = $identityManager;
     }
 
     public function profileAction()
     {
         $userId = $this->params()->fromRoute('login');
-        $user = $this->usersTable->getUser($userId);
+        $user = $this->userManager->getUser($userId);
         if (is_null($user)) {
             return $this->notFoundAction();
         }
@@ -33,11 +31,18 @@ class UserController extends AbstractActionController
 
     public function editAction()
     {
-        $userId = $this->params()->fromRoute('login');
-        $user = $this->usersTable->getUser($userId);
-        if (is_null($user)) {
-            return $this->notFoundAction();
+        $userLogin = $this->params()->fromRoute('login');
+        if ($this->identityManager->hasIdentity()) {
+            $identity = $this->identityManager->getIdentity();
+            if ($identity->getLogin() === $userLogin) {
+                $user = $this->userManager->getUser($userLogin);
+                if (is_null($user)) {
+                    return $this->notFoundAction();
+                }
+                echo "{$user->getLogin()} сасай";
+                return new ViewModel();
+            }
         }
-        echo "user/edit {$this->params()->fromRoute('login')} сасай";
+        return $this->redirect()->toRoute('home');
     }
 }

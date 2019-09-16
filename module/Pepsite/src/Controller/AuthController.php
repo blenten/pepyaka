@@ -1,34 +1,24 @@
 <?php
-/** @noinspection PhpUndefinedMethodInspection */
-/** @noinspection PhpUndefinedFieldInspection */
 
 namespace Pepsite\Controller;
 
-use Pepsite\Entity\User;
-use Pepsite\Form\LoginForm;
 use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
-use Zend\Session\Container;
-use Zend\Session\SessionManager;
-use Pepsite\Model\UsersTable;
+use Pepsite\Service\UserManager;
+use Pepsite\Service\IdentityManager;
+use Pepsite\Form\LoginForm;
 use Pepsite\Form\RegistrationForm;
+use Zend\View\Model\ViewModel;
 
 class AuthController extends AbstractActionController
 {
-    private $usersTable;
-    private $sessionContainer;
-    private $sessionManager;
+    private $userManager;
+    private $identityManager;
     private $dbAdapter;
 
-    public function __construct(
-        UsersTable $usersTable,
-        Container $sessionContainer,
-        SessionManager $sessionManager,
-        $dbAdapter
-    ) {
-        $this->usersTable = $usersTable;
-        $this->sessionContainer = $sessionContainer;
-        $this->sessionManager = $sessionManager;
+    public function __construct(UserManager $userManager, IdentityManager $identityManager, $dbAdapter)
+    {
+        $this->userManager = $userManager;
+        $this->identityManager = $identityManager;
         $this->dbAdapter = $dbAdapter;
     }
 
@@ -42,10 +32,9 @@ class AuthController extends AbstractActionController
             $form->setData($this->params()->fromPost());
             if ($form->isValid()) {
                 $data = $form->getData();
-                $user = new User($data);
-                $this->usersTable->saveUser($user);
-                $this->sessionContainer->user = $user;
-                return $this->redirect()->toRoute('user', ['id' => $data['login']]);
+                $user = $this->userManager->addUser($data);
+                $this->identityManager->setIdentity($user);
+                return $this->redirect()->toRoute('user', ['login' => $data['login']]);
             }
         }
         return new ViewModel([
@@ -63,11 +52,14 @@ class AuthController extends AbstractActionController
             $form->setData($this->params()->fromPost());
             if ($form->isValid()) {
                 $data = $form->getData();
-                $user = $this->usersTable->getUser($data['login']);
-                if ($data['password'] === $user->getPassword()) {
-                    $this->sessionContainer->user = $user;
+                $user = $this->userManager->getValidUser($data['login'], $data['password']);
+                if (!is_null($user)) {
+                    $this->identityManager->setIdentity($user);
                     return $this->redirect()->toRoute('home');
                 }
+                $form->setMessages([
+                    'auth' => ['Неверная комбинация логина и пароля']
+                ]);
             }
         }
         return new ViewModel([
@@ -77,9 +69,7 @@ class AuthController extends AbstractActionController
 
     public function logoutAction()
     {
-        if ($this->sessionManager->sessionExists()) {
-            $this->sessionManager->destroy();
-        }
+        $this->identityManager->clearIdentity();
         return $this->redirect()->toRoute('home');
     }
 }

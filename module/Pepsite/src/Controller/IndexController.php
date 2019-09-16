@@ -1,29 +1,24 @@
 <?php
-/** @noinspection PhpUndefinedFieldInspection */
 
 namespace Pepsite\Controller;
 
+use Pepsite\Service\UserManager;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
-use Zend\Session\Container;
-use Pepsite\Model\UsersTable;
 
 class IndexController extends AbstractActionController
 {
-    private $usersTable;
-    private $sessionContainer;
+    private $userManager;
 
-    public function __construct(UsersTable $usersTable, Container $sessionContainer)
+    public function __construct(UserManager $userManager)
     {
-        $this->usersTable = $usersTable;
-        $this->sessionContainer = $sessionContainer;
+        $this->userManager = $userManager;
     }
 
     public function indexAction()
     {
         return new ViewModel([
-            'topUsers' => $this->usersTable->getTopUsers(),
-            'user'     => $this->sessionContainer->user ?? null,
+            'topUsers' => $this->userManager->getTopUsers(),
         ]);
     }
 }

@@ -85,7 +85,6 @@ class RegistrationForm extends Form
                 'captcha' => [
                     'class'      => Dumb::class,
                     'wordLen'    => 6,
-                    'expiration' => 600,
                     'messages' => [
                         Dumb::BAD_CAPTCHA   => 'Капча не валидна',
                     ]
