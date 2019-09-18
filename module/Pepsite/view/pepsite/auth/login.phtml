@@ -13,28 +13,32 @@ $captcha = $this->form->get('captcha');
 $submit = $this->form->get('submit');
 $submit->setAttribute('class', 'btn btn-lg btn-primary btn-block mt-4');
 
+$messages = $this->form->getMessages();
 $this->form->setAttribute('class', 'form-signin');
 $this->form->prepare();
 ?>
 
-<div class="text-center w-25 mx-auto">
-    <img class="mb-4" src="https://getbootstrap.com/docs/4.0/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
+<div class="text-center mx-auto">
+<!--    <img class="mb-4" src="https://getbootstrap.com/docs/4.0/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">-->
     <h1 class="h3 mb-3 font-weight-normal">Вход</h1>
 </div>
 
-<ul class="text-center list-unstyled m-0">
-    <?php
-    foreach (array_values($this->form->getMessages()) as $elementMessages):
-        foreach (array_values($elementMessages) as $message) :
-    ?>
-    <li><?= $message ?></li>
-    <?php
+<?php if (!empty($messages)) : ?>
+<div class="container-fluid text-center">
+    <div class="d-inline-flex flex-column align-items-start alert alert-danger">
+        <?php
+        foreach (array_values($messages) as $elementMessages):
+            foreach (array_values($elementMessages) as $message) : ?>
+                <div class="d-inline-block py-1"><?= $message ?></div>
+            <?php
+            endforeach;
         endforeach;
-        endforeach;
-    ?>
-</ul>
+        ?>
+    </div>
+</div>
+<?php endif; ?>
 
-<div class="text-center w-25 mx-auto">
+<div class="text-center w-75 w-md-25 mx-auto">
     <?= $this->form()->openTag($this->form); ?>
         <label for="login" class="sr-only">Логин</label>
         <?= $this->formElement($login); ?>

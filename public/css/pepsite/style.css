@@ -1,0 +1,46 @@
+@media only screen and (max-width: 768px) {
+    .content-width {
+        width: 100%;
+    }
+}
+
+@media only screen and (min-width: 768px) {
+    .content-width {
+        width: 88%;
+    }
+
+    .w-md-25 {
+        width: 25% !important;
+    }
+
+    .w-md-50 {
+        width: 50% !important;
+    }
+}
+
+.user-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    border-color: #5a6268;
+}
+
+.user-row button {
+    min-width: 25px;
+    min-height: 25px;
+    width: 2.5rem;
+    height: 2.5rem;
+}
+
+.avatar {
+    min-height: 50px;
+    min-width: 50px;
+    background-color: #5a6268;
+    height: auto;
+}
+
+.user-row .avatar {
+    width: 5rem;
+}

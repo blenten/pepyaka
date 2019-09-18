@@ -7,6 +7,7 @@ use Pepsite\Service\UserManager;
 use Pepsite\Service\IdentityManager;
 use Pepsite\Form\LoginForm;
 use Pepsite\Form\RegistrationForm;
+use Zend\Mvc\MvcEvent;
 use Zend\View\Model\ViewModel;
 
 class AuthController extends AbstractActionController
@@ -27,6 +28,7 @@ class AuthController extends AbstractActionController
         if (isset($this->sessionContainer->user)) {
             return $this->redirect()->toRoute('home');
         }
+        $this->layout()->setVariable('showRegister', false);
         $form = new RegistrationForm($this->dbAdapter);
         if ($this->getRequest()->isPost()) {
             $form->setData($this->params()->fromPost());
@@ -47,6 +49,7 @@ class AuthController extends AbstractActionController
         if (isset($this->sessionContainer->user)) {
             return $this->redirect()->toRoute('home');
         }
+        $this->layout()->setVariable('showLogin', false);
         $form = new LoginForm();
         if ($this->getRequest()->isPost()) {
             $form->setData($this->params()->fromPost());

@@ -75,12 +75,19 @@ class Module implements ConfigProviderInterface
     {
         return [
             'factories' => [
-                ViewHelper\Navbar::class => function ($container) {
-                    return new ViewHelper\Navbar($container->get(Service\IdentityManager::class));
+                ViewHelper\Identity::class => function ($container) {
+                    return new  ViewHelper\Identity(
+                        $container->get(Service\IdentityManager::class),
+                        $container->get(Service\UserManager::class)
+                    );
+                },
+                ViewHelper\LastVote::class => function ($container) {
+                    return new ViewHelper\LastVote($container->get(Model\VotesTable::class));
                 }
             ],
             'aliases' => [
-                'mainNav' => ViewHelper\Navbar::class,
+                'identity' => ViewHelper\Identity::class,
+                'lastVote' => ViewHelper\LastVote::class
             ]
         ];
     }

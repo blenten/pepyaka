@@ -1,13 +1,6 @@
-<?= $this->mainNav()->render() ?>
-<div class="d-flex flex-column w-25">
-    <ul class="list-unstyled">
+<h1 class="display-4 text-center mb-4"> Лучшие люди Интернета</h1>
+<div class="d-flex flex-column align-items-center">
     <?php foreach ($this->topUsers as $topUser) : ?>
-        <li>
-            <div class="d-flex justify-content-between">
-                <a href="<?= $this->url('user', ['login' => $topUser->getLogin()]) ?>"><p><?= $topUser->getLogin() ?></p></a>
-                <p><?= $topUser->getVotes() ?></p>
-            </div>
-        </li>
+        <?= $this->partial('pepsite/partial/userRow', ['user' => $topUser]) ?>
     <?php endforeach; ?>
-    </ul>
 </div>

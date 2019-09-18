@@ -12,8 +12,8 @@
 
         <!-- Le styles -->
         <?= $this->headLink(['rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => $this->basePath() . '/img/favicon.ico'])
+            ->prependStylesheet($this->basePath('css/pepsite/style.css'))
             ->prependStylesheet($this->basePath('css/bs/bootstrap.min.css'))
-            ->prependStylesheet($this->basePath('css/pepsite/layout.css'))
         ?>
 
         <!-- Scripts -->
@@ -23,7 +23,13 @@
         ?>
     </head>
     <body>
-        <div id="content" class="container my-3 p-0">
+        <?= $this->partial(
+                'pepsite/partial/navbar.phtml',
+                [
+                    'showLogin'    => $this->showLogin,
+                    'showRegister' => $this->showRegister
+                ]) ?>
+        <div class="content-width container my-3 p-0">
             <?= $this->content ?>
         </div>
         <?= $this->inlineScript() ?>

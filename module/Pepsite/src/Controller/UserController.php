@@ -34,7 +34,7 @@ class UserController extends AbstractActionController
         $userLogin = $this->params()->fromRoute('login');
         if ($this->identityManager->hasIdentity()) {
             $identity = $this->identityManager->getIdentity();
-            if ($identity->getLogin() === $userLogin) {
+            if ($identity === $userLogin) {
                 $user = $this->userManager->getUser($userLogin);
                 if (is_null($user)) {
                     return $this->notFoundAction();

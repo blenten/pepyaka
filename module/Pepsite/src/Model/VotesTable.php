@@ -21,7 +21,7 @@ class VotesTable extends DBTable
         });
     }
 
-    public function getLastVote($voterLogin, $targetLogin)
+    public function getLastVote($voterLogin, $targetLogin) : ?Vote
     {
         $rowset = $this->tableGateway->select(function (Select $select) use ($voterLogin, $targetLogin) {
             $select->where([

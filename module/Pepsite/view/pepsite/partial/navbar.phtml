@@ -1,0 +1,49 @@
+<?php
+$showLogin = $this->showLogin ?? true;
+$showRegister = $this->showRegister ?? true;
+?>
+
+<nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
+    <div class="container content-width p-0">
+        <a class="navbar-brand" href="<?= $this->url('home') ?>">Pepsite</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav mr-auto">
+                <div class="nav-item">
+                    <a class="nav-link" href="<?= $this->url('home') ?>">Главная<span class="sr-only">(current)</span></a>
+                </div>
+            </ul>
+            <?php if (!$this->identity()->hasIdentity()) : ?>
+                <div class="navbar-nav justify-content-end align-items-end mt-3 mt-md-0">
+                    <?php if ($showRegister) : ?>
+                        <div class="nav-item">
+                            <a class="nav-link" href="<?= $this->url('register') ?>">Зарегистрироваться</a>
+                        </div>
+                    <?php endif; ?>
+                    <?php if ($showLogin) : ?>
+                        <div class="nav-item">
+                            <a class="nav-link" href="<?= $this->url('login') ?>">Войти</a>
+                        </div>
+                    <?php endif; ?>
+                </div>
+            <?php else : ?>
+                <?php
+                $identityUser = $this->identity()->getIdentityUser();
+                $login = $identityUser->getLogin();
+                ?>
+                <div class="navbar-nav align-items-center">
+                    <div class="d-inline-flex flex-row align-items-center mx-auto ml-md-0">
+                        <p class="navbar-text my-0">
+                            Здравствуйте, <a class="h5" href="<?= $this->url('user', ['login' => $login]) ?>"><?= $login ?></a>
+                        </p>
+                        <div class="ml-2 bg-light" style="width: 50px; height: 50px;"></div>
+                    </div>
+                    <p class="navbar-text h5 font-weight-bold my-0 mx-auto ml-md-3"><?= $identityUser->getVotes() ?></p>
+                    <a class="nav-link ml-auto ml-md-3" href="<?= $this->url('logout') ?>">Выйти</a>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+</nav>

@@ -20,10 +20,10 @@ class IdentityManager
 
     public function setIdentity(User $user) : void
     {
-        $this->identityContainer->identity = $user;
+        $this->identityContainer->identity = $user->getLogin();
     }
 
-    public function getIdentity() : ?User
+    public function getIdentity() : ?string
     {
         return $this->identityContainer->identity ?? null;
     }
