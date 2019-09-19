@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "605859bf5b38b7269fd6a15a13f7eede",
+    "content-hash": "701f002072570f2ecd965f07257546a6",
     "packages": [
         {
             "name": "container-interop/container-interop",
@@ -1512,6 +1512,54 @@
             "time": "2018-08-28T21:34:05+00:00"
         },
         {
+            "name": "zendframework/zend-text",
+            "version": "dev-develop",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/zendframework/zend-text.git",
+                "reference": "e24db3357cd848b5967e1d845a8d7fa4c971bf41"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/zendframework/zend-text/zipball/e24db3357cd848b5967e1d845a8d7fa4c971bf41",
+                "reference": "e24db3357cd848b5967e1d845a8d7fa4c971bf41",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^5.6 || ^7.0",
+                "zendframework/zend-servicemanager": "^2.7.5 || ^3.0.3",
+                "zendframework/zend-stdlib": "^2.7 || ^3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^5.7.27 || ^6.5.8 || ^7.1.4",
+                "zendframework/zend-coding-standard": "~1.0.0",
+                "zendframework/zend-config": "^2.6"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.7.x-dev",
+                    "dev-develop": "2.8.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Zend\\Text\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "description": "Create FIGlets and text-based tables",
+            "keywords": [
+                "ZendFramework",
+                "text",
+                "zf"
+            ],
+            "time": "2018-04-30T14:56:14+00:00"
+        },
+        {
             "name": "zendframework/zend-uri",
             "version": "2.7.0",
             "source": {
@@ -1775,12 +1823,14 @@
         "zendframework/zend-component-installer": 20,
         "zendframework/zend-session": 20,
         "zendframework/zend-captcha": 20,
-        "zendframework/zend-crypt": 20
+        "zendframework/zend-crypt": 20,
+        "zendframework/zend-text": 20
     },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^7.3"
+        "php": "^7.3",
+        "ext-gd": "*"
     },
     "platform-dev": []
 }

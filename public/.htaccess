@@ -14,3 +14,7 @@ RewriteRule ^.*$ - [L]
 RewriteCond %{REQUEST_URI}::$1 ^(/.+)/(.*)::\2$
 RewriteRule ^(.*) - [E=BASE:%1]
 RewriteRule ^(.*)$ %{ENV:BASE}/index.php [L]
+
+php_value max_input_time 120
+php_value post_max_size "50M"
+php_value upload_max_filesize "50M"

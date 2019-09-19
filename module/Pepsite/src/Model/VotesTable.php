@@ -11,22 +11,46 @@ class VotesTable extends DBTable
         return parent::makeFactoriesFor('votes', self::class, Vote::class);
     }
 
-    public function getUserVotes($userLogin, $rowLimit = null)
+    public function getVotesFor($targetLogin, $rowLimit = null)
     {
-        return $this->tableGateway->select(function (Select $select) use ($userLogin, $rowLimit) {
-            $select->where(['voter' => (string) $userLogin])->order('voteTime DESC');
+        return $this->tableGateway->select(function (Select $select) use ($targetLogin, $rowLimit) {
+            $select->where(['voteFor' => $targetLogin])->order('voteTime DESC');
             if (!is_null($rowLimit)) {
                 $select->limit((int) $rowLimit);
             }
         });
     }
 
+    public function getUserVoteTargets($voterLogin, $targetList = null)
+    {
+        $rowset = $this->tableGateway->select(function (Select $select) use ($voterLogin, $targetList) {
+            $select->where(['voter' => $voterLogin]);
+            if (!is_null($targetList)) {
+                $select->where(['voteFor ' => $targetList]);
+            }
+            $select->order('voteTime DESC');
+        });
+        if (is_null($rowset)) {
+            return null;
+        }
+        $names = [];
+        $result = [];
+        foreach ($rowset as $row) {
+            $name = $row->getVoteFor();
+            if (!isset($names[$name])) {
+                $names[$name] = true;
+                $result[$name] = $row;
+            }
+        }
+        return $result;
+    }
+
     public function getLastVote($voterLogin, $targetLogin) : ?Vote
     {
         $rowset = $this->tableGateway->select(function (Select $select) use ($voterLogin, $targetLogin) {
             $select->where([
-                'voter'   => (string) $voterLogin,
-                'voteFor' => (string) $targetLogin
+                'voter'   => $voterLogin,
+                'voteFor' => $targetLogin
             ])
                 ->order('voteTime DESC')
                 ->limit(1);

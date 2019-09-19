@@ -1,15 +1,132 @@
 <?php
-$title = $this->user->getLogin();
-$this->headTitle($title);
+/** @noinspection PhpUndefinedMethodInspection */
+
+$login = $this->user->getLogin();
+$identiy = $this->identity()->getIdentity();
+$ownPage = $identiy === $login;
+$this->headTitle($login);
+
+$content = $this->form->get('content');
+$content->setAttribute('class', 'form-control mb-3');
+$submit = $this->form->get('submit');
+$submit->setAttribute('class', 'btn btn-lg btn-primary btn-block mt-4');
+$token = $this->form->get('token');
+$this->form->prepare();
 ?>
-<h1><?= $this->escapeHtml($title) ?></h1>
-<table class="table">
-    <tr>
-        <td>votes</td>
-        <td><?= $this->user->getVotes() ?></td>
-    </tr>
-    <tr>
-        <td>avatar</td>
-        <td><?= $this->user->getAvatar() ?></td>
-    </tr>
-</table>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#karma').on('click', '.vote-button',function () {
+            $(this).parent().addClass('disabled');
+            $.ajax({
+                url: '<?= $this->url('vote') ?>',
+                type: 'POST',
+                async: true,
+                data: {
+                    voter: '<?= $this->identity()->getIdentity() ?>',
+                    target: $(this).attr('data-user'),
+                    effect: $(this).attr('data-effect'),
+                    token: '<?= $this->identity()->getToken() ?>'
+                },
+                success: function () {
+                    $('#karma').load('<?= $this->url('user', ['login' => $login]) ?> #karma>*', function () {
+                        $(this).parent().removeClass('disabled');
+                    })
+                }
+            })
+        });
+
+        $('#comment-form').on('click', ':submit', function (event) {
+            event.preventDefault();
+            let sub = $(this);
+            sub.addClass('disabled');
+            $.ajax({
+                url: '<?= $this->url('user', ['login' => $login]) ?>',
+                type: 'POST',
+                async: true,
+                data: $('#comment-form').serialize(),
+                success: function () {
+                    $('#comment-section').load('<?= $this->url('user', ['login' => $login]) ?> #comment-section>*', function () {
+                        $('#comment-form textarea').val('');
+                        sub.removeClass('disabled');
+                    })
+                },
+                error: function () {
+                    $(this).removeClass('disabled')
+                }
+            })
+        })
+    })
+</script>
+
+<div class="container p-0 w-75 mx-auto mb-3">
+    <hr>
+    <div class="d-flex justify-content-start align-items-center my-md-4">
+        <div class="avatar border rounded p-0">
+            <img class="w-100" alt="(.__.)" src="<?= $this->avatar($this->user->getAvatar()) ?>"/>>
+        </div>
+        <div class="ml-3 pb-3">
+            <h1 class="m-0"><?= $this->escapeHtml($login) ?></h1>
+            <?php if ($ownPage) : ?>
+                <div class="mx-auto text-center">
+                    <a href="<?= $this->url('user', ['login' => $login, 'action' => 'edit']) ?>">Редактировать</a>
+                </div>
+            <?php endif; ?>
+        </div>
+        <div id="karma" class="d-inline-flex flex-row justify-content-around align-items-center border rounded p-1 px-2 mx-auto">
+            <div class="text-center display-4 user-score">
+                Карма: <?= $this->user->getVotes() ?>
+            </div>
+            <?php if (!$ownPage) : ?>
+                <div class="ml-3">
+                    <?= $this->partial(
+                        'pepsite/partial/voteButtons.phtml',
+                        ['login' => $login, 'vote' => $this->lastVote($identiy, $login)]
+                    ) ?>
+                </div>
+            <?php endif; ?>
+        </div>
+    </div>
+    <hr>
+    <?php if (isset($this->votes, $this->genders)) : ?>
+        <div class="mt-4 w-100">
+            <h2>История</h2>
+            <div class="d-block w-75 mx-auto mt-4">
+                <?php
+                foreach ($this->votes as $vote) {
+                    echo $this->partial(
+                        'pepsite/partial/voteRow.phtml',
+                        ['vote' => $vote, 'voterGender' => $this->genders[$vote->getVoter()]]
+                    );
+                }
+                ?>
+            </div>
+        </div>
+    <?php endif; ?>
+    <hr>
+    <div id="comment-section" class="mt-4 w-100">
+        <?php if (isset($this->comments, $this->genders)) : ?>
+            <h2>Комментарии</h2>
+            <div  class="d-block w-75 mx-auto mt-4">
+                <?php
+                foreach ($this->comments as $comment) {
+                    echo $this->partial(
+                        'pepsite/partial/comment.phtml',
+                        ['comment' => $comment, 'commenterGender' => $this->genders[$comment->getAuthor()]]
+                    );
+                }
+                ?>
+            </div>
+        <?php endif; ?>
+    </div>
+    <div class="w-75 mt-5 mx-auto">
+        <?php if (!is_null($identiy) and !$ownPage) : ?>
+            <?= $this->form()->openTag($this->form) ?>
+            <?= $this->formHidden($token) ?>
+            <?= $this->formTextArea($content) ?>
+            <div class="w-25 ml-auto">
+                <?= $this->formSubmit($submit); ?>
+            </div>
+            <?= $this->form()->closeTag(); ?>
+        <?php endif; ?>
+    </div>
+</div>

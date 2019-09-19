@@ -15,19 +15,8 @@ class LastVote extends AbstractHelper
         $this->votesTable = $votesTable;
     }
 
-    public function __invoke($voterLogin, $targetLogin) : ?int
+    public function __invoke($voterLogin, $targetLogin) : ?Vote
     {
-        $vote = $this->votesTable->getLastVote($voterLogin, $targetLogin);
-        if (is_null($vote)) {
-            return null;
-        }
-        $effect = $vote->getEffect();
-        if ($effect === Vote::VOTE_POSITIVE) {
-            return 1;
-        }
-        if ($effect === Vote::VOTE_NEGATIVE) {
-            return -1;
-        }
-        return 0;
+        return $this->votesTable->getLastVote($voterLogin, $targetLogin);
     }
 }

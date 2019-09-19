@@ -2,24 +2,28 @@
 
 namespace Pepsite\Controller;
 
+use Pepsite\Service\{UserManager, IdentityManager, ImageManager};
 use Zend\Mvc\Controller\AbstractActionController;
-use Pepsite\Service\UserManager;
-use Pepsite\Service\IdentityManager;
 use Pepsite\Form\LoginForm;
 use Pepsite\Form\RegistrationForm;
-use Zend\Mvc\MvcEvent;
 use Zend\View\Model\ViewModel;
 
 class AuthController extends AbstractActionController
 {
     private $userManager;
     private $identityManager;
+    private $imageManager;
     private $dbAdapter;
 
-    public function __construct(UserManager $userManager, IdentityManager $identityManager, $dbAdapter)
-    {
+    public function __construct(
+        UserManager $userManager,
+        IdentityManager $identityManager,
+        ImageManager $imageManager,
+        $dbAdapter
+    ) {
         $this->userManager = $userManager;
         $this->identityManager = $identityManager;
+        $this->imageManager = $imageManager;
         $this->dbAdapter = $dbAdapter;
     }
 
@@ -31,9 +35,11 @@ class AuthController extends AbstractActionController
         $this->layout()->setVariable('showRegister', false);
         $form = new RegistrationForm($this->dbAdapter);
         if ($this->getRequest()->isPost()) {
-            $form->setData($this->params()->fromPost());
+            $data = $this->params()->fromPost() + $this->params()->fromFiles();
+            $form->setData($data);
             if ($form->isValid()) {
                 $data = $form->getData();
+                $data['avatar'] = $this->imageManager->saveImage($data['avatar']);
                 $user = $this->userManager->addUser($data);
                 $this->identityManager->setIdentity($user);
                 return $this->redirect()->toRoute('user', ['login' => $data['login']]);

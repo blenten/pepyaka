@@ -1,0 +1,26 @@
+<?php
+$identity = $this->identity()->getIdentity();
+
+if (!is_null($identity) and $identity !== $this->login) {
+    if(!is_null($this->vote)) {
+        switch ($this->vote->getEffect()) {
+            case Pepsite\Entity\Vote::VOTE_POSITIVE:
+                $active = ['active', null];
+                break;
+            case Pepsite\Entity\Vote::VOTE_NEGATIVE:
+                $active = [null, 'active'];
+                break;
+            case Pepsite\Entity\Vote::VOTE_NEUTRAL:
+                $active = [null, null];
+                break;
+        }
+    } else {
+        $active = [null, null];
+    }
+} else
+    $active = ['disabled', 'disabled'];
+
+use Pepsite\Entity\Vote; ?>
+
+<button type="button" data-user="<?= $this->login ?>" data-effect="UP" class="btn vote-button btn-outline-success font-weight-bold pb-2 m-1 <?= $active[0] ?>">+</button>
+<button type="button" data-user="<?= $this->login ?>" data-effect="DOWN" class="btn vote-button btn-outline-danger font-weight-bold pb-2 m-1 <?= $active[1] ?>">-</button>

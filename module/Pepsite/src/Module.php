@@ -6,6 +6,7 @@ namespace Pepsite;
 use Zend\ModuleManager\Feature\ConfigProviderInterface;
 use Zend\Db\Adapter\AdapterInterface;
 use Zend\Mvc\MvcEvent;
+use Zend\ServiceManager\Factory\InvokableFactory;
 use Zend\Session\SessionManager;
 
 class Module implements ConfigProviderInterface
@@ -39,7 +40,8 @@ class Module implements ConfigProviderInterface
                             $container->get(Service\IdentityManager::SESSION_CONTAINER),
                             $container->get(SessionManager::class)
                         );
-                    }
+                    },
+                    Service\ImageManager::class => InvokableFactory::class,
                 ]
             )
         ];
@@ -52,18 +54,22 @@ class Module implements ConfigProviderInterface
                 Controller\IndexController::class => function ($container) {
                     return new Controller\IndexController(
                         $container->get(Service\UserManager::class),
+                        $container->get(Service\IdentityManager::class)
                     );
                 },
                 Controller\UserController::class => function ($container) {
                     return new Controller\UserController(
                         $container->get(Service\UserManager::class),
-                        $container->get(Service\IdentityManager::class)
+                        $container->get(Service\IdentityManager::class),
+                        $container->get(Service\ImageManager::class),
+                        $container->get(Model\CommentsTable::class)
                     );
                 },
                 Controller\AuthController::class => function ($container) {
                     return new Controller\AuthController(
                         $container->get(Service\UserManager::class),
                         $container->get(Service\IdentityManager::class),
+                        $container->get(Service\ImageManager::class),
                         $container->get(AdapterInterface::class)
                     );
                 }
@@ -83,11 +89,18 @@ class Module implements ConfigProviderInterface
                 },
                 ViewHelper\LastVote::class => function ($container) {
                     return new ViewHelper\LastVote($container->get(Model\VotesTable::class));
+                },
+                ViewHelper\Avatar::class => function ($container) {
+                    return new ViewHelper\Avatar(
+                        $container->get(Service\UserManager::class),
+                        $container->get(Service\ImageManager::class)
+                    );
                 }
             ],
             'aliases' => [
                 'identity' => ViewHelper\Identity::class,
-                'lastVote' => ViewHelper\LastVote::class
+                'lastVote' => ViewHelper\LastVote::class,
+                'avatar'   => ViewHelper\Avatar::class
             ]
         ];
     }

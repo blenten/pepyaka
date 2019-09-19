@@ -1,11 +1,8 @@
 <?php
 namespace Pepsite\Form;
 
-use Zend\Captcha\Dumb;
+use Zend\Captcha\Figlet;
 use Zend\Form\Form;
-use Zend\Validator\Db\RecordExists;
-use Zend\Validator\Regex;
-use Zend\Validator\StringLength;
 
 class LoginForm extends Form
 {
@@ -49,14 +46,16 @@ class LoginForm extends Form
 
         $this->add([
             'type'  => 'captcha',
-            'name'  => 'captcha',
+            'name' => 'captcha',
+            'attributes' => [
+            ],
             'options' => [
-                'label'   => 'Human check',
                 'captcha' => [
-                    'class' => Dumb::class,
-                    'wordLen'    => 6,
+                    'class' => Figlet::class,
+                    'wordLen' => 6,
+                    'expiration' => 600,
                     'messages' => [
-                        Dumb::BAD_CAPTCHA => 'Капча не валидна'
+                        Figlet::BAD_CAPTCHA => 'Неверно введены цифры с картинки'
                     ]
                 ],
             ],

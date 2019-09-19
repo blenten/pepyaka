@@ -41,7 +41,7 @@ class User extends DBEntity
     public function setGender($gender)
     {
         if (!in_array($gender, [self::GENDER_MALE, self::GENDER_FEMALE])) {
-            throw new \Exception("Wrong gender value: {$gender}");
+            throw new \UnexpectedValueException("Wrong gender value: {$gender}");
         }
         $this->gender = $gender;
     }

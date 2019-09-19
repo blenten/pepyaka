@@ -38,9 +38,13 @@ $showRegister = $this->showRegister ?? true;
                         <p class="navbar-text my-0">
                             Здравствуйте, <a class="h5" href="<?= $this->url('user', ['login' => $login]) ?>"><?= $login ?></a>
                         </p>
-                        <div class="ml-2 bg-light" style="width: 50px; height: 50px;"></div>
+                        <div class="avatar border rounded ml-2">
+                            <a href="<?= $this->url('user', ['login' => $login]) ?>">
+                                <img href="" class="w-100" alt="(.__.)" src="<?= $this->avatar($identityUser->getAvatar()) ?>"/>>
+                            </a>
+                        </div>
                     </div>
-                    <p class="navbar-text h5 font-weight-bold my-0 mx-auto ml-md-3"><?= $identityUser->getVotes() ?></p>
+                    <p class="navbar-text font-weight-bold my-0 mx-auto ml-md-3"><?= $identityUser->getVotes() ?></p>
                     <a class="nav-link ml-auto ml-md-3" href="<?= $this->url('logout') ?>">Выйти</a>
                 </div>
             <?php endif; ?>

@@ -10,11 +10,13 @@ use Zend\View\Helper\AbstractHelper;
 class Identity extends AbstractHelper
 {
     private $identity;
+    private $token;
     private $userManager;
 
     public function __construct(IdentityManager $identityManager, UserManager $userManager)
     {
         $this->identity = $identityManager->getIdentity();
+        $this->token = $identityManager->getToken();
         $this->userManager = $userManager;
     }
 
@@ -26,6 +28,10 @@ class Identity extends AbstractHelper
     public function getIdentity() : ?string
     {
         return $this->identity;
+    }
+    public function getToken() : ?string
+    {
+        return $this->token;
     }
 
     public function getIdentityUser() : ?User

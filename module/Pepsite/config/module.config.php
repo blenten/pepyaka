@@ -61,6 +61,16 @@ return [
                     ],
                 ],
             ],
+            'vote' => [
+                'type' => Literal::class,
+                'options' => [
+                    'route'    => '/vote',
+                    'defaults' => [
+                        'controller' => Controller\UserController::class,
+                        'action'     => 'vote',
+                    ],
+                ],
+            ]
         ],
     ],
     'view_manager' => [

@@ -13,10 +13,14 @@ class UsersTable extends DBTable
 
     public function getUser($login)
     {
-        $login = (string) $login;
         $rowset = $this->tableGateway->select(['login' => $login]);
         $row = $rowset->current();
         return $row ? $row : null;
+    }
+
+    public function getUsers($userLogins)
+    {
+        return $this->tableGateway->select(['login' => $userLogins]);
     }
 
     public function getTopUsers()

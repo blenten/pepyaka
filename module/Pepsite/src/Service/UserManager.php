@@ -9,10 +9,11 @@ use Pepsite\Model\UsersTable;
 use Pepsite\Model\VotesTable;
 use Zend\Crypt\Password\Bcrypt;
 use Zend\Db\ResultSet\ResultSet;
+use RuntimeException;
 
 class UserManager
 {
-    private $userTable;
+    private $usersTable;
     private $votesTable;
 
     public const DVOTE_POSITIVE = 1;
@@ -20,23 +21,37 @@ class UserManager
 
     public function __construct(UsersTable $usersTable, VotesTable $votesTable)
     {
-        $this->userTable = $usersTable;
+        $this->usersTable = $usersTable;
         $this->votesTable = $votesTable;
     }
 
     public function getUser($login) : ?User
     {
-        return $this->userTable->getUser($login);
+        return !is_null($login) ? $this->usersTable->getUser($login) : null;
+    }
+    public function getUsers($userLogins) : ?ResultSet
+    {
+        return !empty($userLogins) ? $this->usersTable->getUsers($userLogins) : null;
     }
 
-    public function getTopUsers() : ResultSet
+    public function getTopUsers() : ?ResultSet
     {
-        return $this->userTable->getTopUsers();
+        return $this->usersTable->getTopUsers();
+    }
+
+    public function getVotesFor($targetLogin, $limit) : ?ResultSet
+    {
+        return $this->votesTable->getVotesFor($targetLogin, $limit);
+    }
+
+    public function getUserVoteTargets($voterLogin, $targets = null) : ?array
+    {
+        return $this->votesTable->getUserVoteTargets($voterLogin, $targets);
     }
 
     public function getValidUser($login, $password) : ?User
     {
-        $user = $this->userTable->getUser($login);
+        $user = $this->usersTable->getUser($login);
         if (!is_null($user)) {
             if ($this->validatePassword($user, $password)) {
                 return $user;
@@ -60,13 +75,13 @@ class UserManager
         $data['password'] = $bcrypt->create($data['password']);
         $user = new User();
         $user->exchangeArray($data);
-        $this->userTable->createUser($user);
+        $this->usersTable->createUser($user);
         return $user;
     }
 
     public function updateUser(User $user) : void
     {
-        $this->userTable->updateUser($user);
+        $this->usersTable->updateUser($user);
     }
 
     public function upvote($voterLogin, $targetLogin) : bool
@@ -79,22 +94,14 @@ class UserManager
         return $this->vote($voterLogin, $targetLogin, Vote::VOTE_NEGATIVE);
     }
 
-    public function unvote($voterLogin, $targetLogin) : bool
-    {
-        return $this->vote($voterLogin, $targetLogin, Vote::VOTE_NEUTRAL);
-    }
-
     private function vote($voterLogin, $targetLogin, $effect)
     {
         if (!in_array($effect, [Vote::VOTE_NEUTRAL, Vote::VOTE_POSITIVE, Vote::VOTE_NEGATIVE])) {
-            throw new \Exception("Wrong vote effect: {$effect}");
+            throw new RuntimeException("Wrong vote effect: {$effect}");
         }
         $lastVote = $this->votesTable->getLastVote($voterLogin, $targetLogin);
         $dVotes = 0;
         if (is_null($lastVote)) {
-            if ($effect == Vote::VOTE_NEUTRAL) {
-                throw new \Exception("Cannot unvote the unvoted\n\t{$voterLogin} {$targetLogin}");
-            }
             switch ($effect) {
                 case Vote::VOTE_NEGATIVE:
                     $dVotes = self::DVOTE_NEGATIVE;
@@ -103,15 +110,16 @@ class UserManager
                     $dVotes = self::DVOTE_POSITIVE;
                     break;
                 case Vote::VOTE_NEUTRAL:
-                    $dVotes = 0;
-                    break;
+                    return false;
             }
         } else {
             $lastVoteEffect = $lastVote->getEffect();
             if ($lastVoteEffect === $effect) {
-                return false;
+                $effect = Vote::VOTE_NEUTRAL;
             }
             switch ([$lastVoteEffect, $effect]) {
+                case [Vote::VOTE_NEUTRAL, Vote::VOTE_NEUTRAL]:
+                    return false;
                 case [Vote::VOTE_NEUTRAL, Vote::VOTE_POSITIVE]:
                 case [Vote::VOTE_NEGATIVE, Vote::VOTE_NEUTRAL]:
                     $dVotes = self::DVOTE_POSITIVE;
@@ -135,12 +143,12 @@ class UserManager
             'voteFor' => $targetLogin,
         ]);
         $this->votesTable->createVote($vote);
-        $user = $this->userTable->getUser($targetLogin);
+        $user = $this->usersTable->getUser($targetLogin);
         if (is_null($user)) {
-            throw new \Exception("Could not update votes for user {$targetLogin} , user doesn't exist");
+            return false;
         }
         $user->setVotes($user->getVotes() + $dVotes);
-        $this->userTable->updateUser($user);
+        $this->usersTable->updateUser($user);
         return true;
     }
 }

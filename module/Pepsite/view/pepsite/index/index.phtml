@@ -1,6 +1,45 @@
 <h1 class="display-4 text-center mb-4"> Лучшие люди Интернета</h1>
-<div class="d-flex flex-column align-items-center">
-    <?php foreach ($this->topUsers as $topUser) : ?>
-        <?= $this->partial('pepsite/partial/userRow', ['user' => $topUser]) ?>
-    <?php endforeach; ?>
+<div id="top-users" class="d-flex flex-column align-items-center">
+    <?php
+    foreach ($this->topUsers as $topUser) {
+         echo $this->partial(
+                 'pepsite/partial/userRow',
+                 ['user' => $topUser, 'vote' => $this->votes[$topUser->getLogin()] ?? null]
+         );
+    }
+    ?>
 </div>
+
+<div id="loader" class="text-center">
+    <div class="cssload-container">
+        <div class="cssload-speeding-wheel"></div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#top-users').on('click', '.vote-button',function () {
+            $('#top-users').addClass('disabled');
+            $('#loader').show();
+            $.ajax({
+                url: '<?= $this->url('vote') ?>',
+                type: 'POST',
+                async: true,
+                data: {
+                    voter: '<?= $this->identity()->getIdentity() ?>',
+                    target: $(this).attr('data-user'),
+                    effect: $(this).attr('data-effect'),
+                    token: '<?= $this->identity()->getToken() ?>'
+                },
+                success: function () {
+                    let top = $('#top-users');
+                    top.load('<?= $this->url('home') ?> #top-users>*', function () {
+                        top.removeClass('disabled');
+                        $('#loader').hide();
+                    });
+
+                }
+            });
+        })
+    })
+</script>

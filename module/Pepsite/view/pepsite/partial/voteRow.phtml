@@ -1,0 +1,44 @@
+<?php
+
+$date = date('j-m-Y G:i', strtotime($this->vote->getVoteTime()));
+$voterLogin = $this->vote->getVoter();
+$verbStem = 'постави';
+switch ($this->voterGender) {
+    case Pepsite\Entity\User::GENDER_FEMALE:
+        $verbEnding = 'ла';
+        break;
+    case Pepsite\Entity\User::GENDER_MALE:
+    default:
+        $verbEnding = 'л';
+}
+switch ($this->vote->getEffect()) {
+    case Pepsite\Entity\Vote::VOTE_POSITIVE:
+        $effect = '+';
+        $alertType = 'alert-success';
+        break;
+    case Pepsite\Entity\Vote::VOTE_NEGATIVE:
+        $alertType = 'alert-danger';
+        $effect = '-';
+        break;
+    case Pepsite\Entity\Vote::VOTE_NEUTRAL:
+    default:
+        $alertType = 'alert-warning';
+        $verbStem = 'убра';
+        $verbEnding .= ' оценку';
+        $effect = null;
+}
+$verb = $verbStem . $verbEnding;
+?>
+
+<div class="d-flex justify-content-center align-items-baseline alert <?= $alertType ?> w-100" role="alert">
+    <div>
+        <?= $date ?>
+    </div>
+    <div class="mx-4">
+        <a class="font-weight-bold" href="<?= $this->url('user', ['login' => $voterLogin]) ?>"><?= $voterLogin ?></a>
+    </div>
+    <div>
+        <?= $verb ?>
+        <span class="h4 font-weight-bold p-0 ml-3"><?= $effect ?></span>
+    </div>
+</div>

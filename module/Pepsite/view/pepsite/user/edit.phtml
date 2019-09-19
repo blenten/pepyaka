@@ -1,0 +1,64 @@
+<?php
+/** @noinspection PhpUndefinedMethodInspection */
+
+$this->headTitle('Профиль');
+
+$login = $this->form->get('login');
+$login->setAttribute('class', 'form-control');
+
+$avatar = $this->form->get('avatar');
+$avatar->setAttribute('class', 'form-control-file');
+
+$gender = $this->form->get('gender');
+$gender->setAttribute('class', 'form-control');
+
+$token = $this->form->get('token');
+
+$submit = $this->form->get('submit');
+$submit->setAttribute('class', 'btn btn-lg btn-primary btn-block mt-4');
+
+$messages = $this->form->getMessages();
+$this->form->setAttribute('class', 'form-signin');
+$this->form->prepare();
+?>
+<div class="text-center">
+    <h1 class="h3 font-weight-normal">Мой профиль</h1>
+</div>
+
+<?php if (!empty($messages)) : ?>
+    <div class="container-fluid text-center">
+        <div class="d-inline-flex flex-column align-items-start alert alert-danger">
+            <?php
+            foreach (array_values($messages) as $elementMessages):
+                foreach (array_values($elementMessages) as $message) : ?>
+                    <div class="d-inline-block py-1"><?= $message ?></div>
+                <?php
+                endforeach;
+            endforeach;
+            ?>
+        </div>
+    </div>
+<?php endif; ?>
+
+<div class="w-75 w-md-25 mx-auto">
+    <?= $this->form()->openTag($this->form); ?>
+    <div class="form-group my-2">
+        <?= $this->formLabel($login) ?>
+        <?= $this->formElement($login) ?>
+    </div>
+
+    <div class="form-group mb-2">
+        <?= $this->formLabel($avatar) ?>
+        <?= $this->formFile($avatar) ?>
+    </div>
+
+    <div class="form-group mb-2">
+        <?= $this->formLabel($gender) ?>
+        <?= $this->formSelect($gender) ?>
+    </div>
+
+    <?= $this->formSubmit($submit); ?>
+    <?= $this->formHidden($token); ?>
+    <?= $this->form()->closeTag(); ?>
+</div>
+

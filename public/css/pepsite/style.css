@@ -19,15 +19,24 @@
 }
 
 .user-row {
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: row;
     flex-direction: row;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
     justify-content: space-between;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
     align-items: center;
     padding: 1rem 1.5rem;
     border-color: #5a6268;
 }
 
-.user-row button {
+.vote-button {
     min-width: 25px;
     min-height: 25px;
     width: 2.5rem;
@@ -35,12 +44,32 @@
 }
 
 .avatar {
-    min-height: 50px;
-    min-width: 50px;
+    width: 8rem;
+    max-height: 50px;
+    max-width: 50px;
     background-color: #5a6268;
     height: auto;
+    border-color: #5a6268;
+    overflow: hidden;
 }
 
-.user-row .avatar {
-    width: 5rem;
+.user-score {
+    font-max-size: 20px;
+    font-size: 2.5rem;
+}
+
+.disabled {
+    pointer-events: none;
+    opacity: 0.4;
+}
+
+#loader {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-top: -50px;
+    margin-left: -50px;
+    width: 100px;
+    height: 100px;
 }

@@ -2,15 +2,11 @@
 namespace Pepsite\Form;
 
 use Pepsite\Entity\User;
+use Zend\Captcha\Figlet;
 use Zend\Form\Form;
-use Zend\Captcha\Dumb;
-use Zend\Validator\Db\NoRecordExists;
-use Zend\Validator\File\MimeType;
-use Zend\Validator\File\Size;
-use Zend\Validator\InArray;
-use Zend\Validator\NotEmpty;
-use Zend\Validator\Regex;
-use Zend\Validator\StringLength;
+use Zend\Validator\{InArray, NotEmpty, StringLength, Regex, Db\NoRecordExists};
+use Zend\Validator\File\{MimeType, Size};
+use Zend\InputFilter\FileInput;
 
 class RegistrationForm extends Form
 {
@@ -57,6 +53,9 @@ class RegistrationForm extends Form
             'name' => 'avatar',
             'options' => [
                 'label' => 'Аватар',
+            ],
+            'attributes' => [
+                'accept' => 'image/jpeg, image/jpg, image/gif, image/png'
             ]
         ]);
 
@@ -79,14 +78,16 @@ class RegistrationForm extends Form
 
         $this->add([
             'type'  => 'captcha',
-            'name'  => 'captcha',
+            'name' => 'captcha',
+            'attributes' => [
+            ],
             'options' => [
-                'label' => 'Human check',
                 'captcha' => [
-                    'class'      => Dumb::class,
-                    'wordLen'    => 6,
+                    'class' => Figlet::class,
+                    'wordLen' => 6,
+                    'expiration' => 600,
                     'messages' => [
-                        Dumb::BAD_CAPTCHA   => 'Капча не валидна',
+                        Figlet::BAD_CAPTCHA => 'Неверно введены цифры с картинки'
                     ]
                 ],
             ],
@@ -140,7 +141,8 @@ class RegistrationForm extends Form
                     'options' => [
                         'pattern' => '~(?=.*[a-z,A-Z])^[a-z,A-Z,0-9]+$~',
                         'messages' => [
-                            Regex::NOT_MATCH => 'Логин должен состоять из букв латинского алфавита и, возможно, цифр.'
+                            Regex::NOT_MATCH =>
+                                'Логин должен состоять из букв латинского алфавита и, возможно, цифр.'
                         ]
                     ],
                     'break_chain_on_failure' => true
@@ -205,10 +207,9 @@ class RegistrationForm extends Form
         ]);
 
         $inputFilter->add([
+            'type' => FileInput::class,
             'name'     => 'avatar',
             'required' => false,
-            'filters'  => [
-            ],
             'validators' => [
                 [
                     'name' => MimeType::class,
@@ -219,7 +220,7 @@ class RegistrationForm extends Form
                             'Аватар должен быть файлом расширения .jpeg, .jpg, .gif или .png'
                         )
                     ],
-//                    'break_chain_on_failure' => true
+                    'break_chain_on_failure' => true
                 ],
                 [
                     'name' => Size::class,
@@ -229,12 +230,9 @@ class RegistrationForm extends Form
                             Size::TOO_BIG => 'Размер аватара не должен превышать %max%'
                         ]
                     ],
-//                    'break_chain_on_failure' => true
+                    'break_chain_on_failure' => true
                 ],
-//                [
-//                    TODO: image aspect ration + min_width=50px validator
-//                ],
-            ]
+            ],
         ]);
 
         $inputFilter->add([
@@ -264,6 +262,22 @@ class RegistrationForm extends Form
                         ]
                     ],
                 ],
+            ]
+        ]);
+
+        $inputFilter->add([
+            'name'     => 'captcha',
+            'required' => true,
+            'validators' => [
+                [
+                    'name' => NotEmpty::class,
+                    'options' => [
+                        'messages' => [
+                            NotEmpty::IS_EMPTY => 'Пожалуйста, введите капчу'
+                        ]
+                    ],
+                    'break_chain_on_failure' => true
+                ]
             ]
         ]);
     }

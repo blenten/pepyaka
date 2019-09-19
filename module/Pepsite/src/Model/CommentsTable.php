@@ -20,4 +20,14 @@ class CommentsTable extends DBTable
             }
         });
     }
+
+    public function createComment(Comment $comment)
+    {
+        $data = [
+            'content' => $comment->getContent(),
+            'author'  => $comment->getAuthor(),
+            'target'  => $comment->getTarget()
+        ];
+        return $this->tableGateway->insert($data);
+    }
 }

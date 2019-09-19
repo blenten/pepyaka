@@ -38,17 +38,23 @@ $this->form->prepare();
 </div>
 <?php endif; ?>
 
-<div class="text-center w-75 w-md-25 mx-auto">
-    <?= $this->form()->openTag($this->form); ?>
+
+<?= $this->form()->openTag($this->form); ?>
+    <div class="text-center w-75 w-md-25 mx-auto">
         <label for="login" class="sr-only">Логин</label>
         <?= $this->formElement($login); ?>
 
         <label for="inputPassword" class="sr-only">Пароль</label>
         <?= $this->formPassword($password); ?>
+    </div>
 
+    <div class="text-center form-group mx-auto my-4">
+        <?= $this->formCaptcha($this->form->get('captcha')); ?>
+        <p class="help-block">Введите буквы, которые вы видите на изображении выше.<p>
+    </div>
 
-        <?= $this->formCaptcha($captcha); ?>
-
+    <div class="text-center w-75 w-md-25 mx-auto">
         <?= $this->formSubmit($submit); ?>
-    <?= $this->form()->closeTag(); ?>
+    </div>
+<?= $this->form()->closeTag(); ?>
 </div>

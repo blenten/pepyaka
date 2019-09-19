@@ -1,29 +1,22 @@
 <?php
-$identity = $this->identity()->getIdentity();
 $login = $this->user->getLogin();
-if (!is_null($identity) and $identity != $login) {
-    $lastVote = $this->lastVote($identity, $login);
-    if (is_null($lastVote) or $lastVote === 0) {
-        $active = [null, null];
-    } elseif ($lastVote > 0) {
-        $active = ['active', null];
-    } else {
-        $active = [null, 'active'];
-    }
-} else
-    $active = ['disabled', 'disabled'];
 ?>
 
 <div class="user-row border rounded w-75 w-md-50 my-1 my-md-2">
-    <a href="<?= $this->url('user', ['login' => $login]) ?>">
-        <div class="d-inline-flex flex-column align-items-center">
-            <img src="..." class="avatar">
-            <div class="h4 p-0 m-0"><?= $login ?></div>
+    <div class="container-fluid p-0 mr-3">
+        <a href="<?= $this->url('user', ['login' => $login]) ?>">
+            <div class="d-inline-flex flex-row align-items-baseline">
+                <div class="avatar border rounded p-0">
+                    <img class="w-100" alt="(.__.)" src="<?= $this->avatar($this->user->getAvatar()) ?>"/>>
+                </div>
+                <div class="h4 p-0 m-0 ml-2"><?= $login ?></div>
+            </div>
+        </a>
+        <div class="text-center display-4 user-score mt-2 p-0 pl-5">
+            <?= $this->user->getVotes() ?>
         </div>
-    </a>
-    <div class="display-4"><?= $this->user->getVotes() ?></div>
-    <div class="d-flex flex-column justify-content-center align-items-center">
-        <button type="button" class="btn btn-outline-success p-2 mb-1 <?= $active[0] ?>">+</button>
-        <button type="button" class="btn btn-outline-danger p-2 <?= $active[1] ?>">-</button>
+    </div>
+    <div  class="d-flex flex-column justify-content-center align-items-center">
+        <?= $this->partial('pepsite/partial/voteButtons.phtml', ['login' => $login, 'vote' => $this->vote]) ?>
     </div>
 </div>
